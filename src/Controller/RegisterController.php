@@ -32,9 +32,9 @@ class RegisterController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             // dd($form->getData());
 
-            // On persiste l'utilisateur
+            // On persiste l'utilisateur => prépare l'envoi des données
             $this->manager->persist($user);
-            // On flush
+            // On flush => Envoyer les données
             $this->manager->flush();
         }
 
