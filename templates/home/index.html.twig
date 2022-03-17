@@ -16,8 +16,8 @@
                         <br>
                         <span>{{article.publication | date("d/m/y")}}</span>
                         <br>
-                        {# BOUTON POUR SUPPRIMER #}
-                        <a class="btn btn-danger" href="">Supprimer</a>
+                        {# BOUTON POUR SUPPRIMER EN RELIANT app_article_delete DANS ArticleController.php #}
+                        <a class="btn btn-danger" href="{{path('app_article_delete', {id:article.id})}}">Supprimer</a>
                     </div>
                 </div>
             {% endfor %}
