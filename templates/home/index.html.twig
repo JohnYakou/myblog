@@ -3,6 +3,7 @@
 {% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
+{# ---------- DELETE ---------- #}
     <section class="container m-5">
         <div class="row">
             {% for article in articles %}
@@ -14,10 +15,27 @@
                         <p class="card-text">{{article.description}}</p>
                         <a href="#" class="btn btn-primary">{{article.auteur}}</a>
                         <br>
-                        <span>{{article.publication | date("d/m/y")}}</span>
+                        <span>{{article.publication | date("d/m/Y")}}</span>
                         <br>
+                        {# app.user => utilisateur connecté #}
+                        {# Grace à cette condition, seul l'admin peut supprimer ou modifier un article #}
+                        {% if is_granted("ROLE_ADMIN") %}
                         {# BOUTON POUR SUPPRIMER EN RELIANT app_article_delete DANS ArticleController.php #}
                         <a class="btn btn-danger" href="{{path('app_article_delete', {id:article.id})}}">Supprimer</a>
+                        <a class="btn btn-warning" href="{{path('app_article_edit', {id:article.id})}}">Edit</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% for user in users %}
+                <div class="card col-md-3 m-2" style="width: 18rem;">            
+                    <div class="card-body">
+                        <h5 class="card-title">{{user.email}}</h5>
+                        <h5 class="card-title">{{user.password}}</h5>
+                        <h5 class="card-title">{{user.nom}}</h5>
+                        <h5 class="card-title">{{user.prenom}}</h5>
+                        <h5 class="card-title">{{user.dateDeNaissance | date('d/m/Y')}}</h5>
                     </div>
                 </div>
             {% endfor %}

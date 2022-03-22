@@ -20,7 +20,6 @@ class ArticleType extends AbstractType
             ->add('description', TextareaType::class)
             ->add('photo', TextType::class)
             ->add('publication', DateType::class)
-            ->add('auteur', TextType::class)
             ->add('submit', SubmitType::class)
         ;
     }

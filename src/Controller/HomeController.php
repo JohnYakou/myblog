@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Article;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,8 +26,13 @@ class HomeController extends AbstractController
         // Equivalent d'un var_dump
         // dd($articles);
 
+        $users = $this->manager->getRepository(User::class)->findAll();
+
+        // On ne peut qu'avoir qu'un seul return
         return $this->render('home/index.html.twig', [
             'articles' => $articles,
+            'users' => $users,
         ]);
+    
     }
 }

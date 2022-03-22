@@ -9,12 +9,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class RegisterController extends AbstractController
 {
 
-    public function __construct(EntityManagerInterface $manager){
+    public function __construct(EntityManagerInterface $manager, UserPasswordHasherInterface $passwordHash){
         $this->manager = $manager;
+        $this->passwordHash = $passwordHash;
     }
 
     /**
@@ -32,10 +34,15 @@ class RegisterController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             // dd($form->getData());
 
+            // Hashage du mot de passe
+            $user->setPassword($this->passwordHash->hashPassword($user, $user->getPassword()));
             // On persiste l'utilisateur => prépare l'envoi des données
             $this->manager->persist($user);
             // On flush => Envoyer les données
             $this->manager->flush();
+
+            // $passwordEncod = $this->passwordHash->hashPassword($user, $user->getPassword());
+
         }
 
         return $this->render('register/index.html.twig', [

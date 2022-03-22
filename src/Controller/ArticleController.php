@@ -26,6 +26,10 @@ class ArticleController extends AbstractController
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
+
+        // Pour récupérer dynamiquement le nom de l'auteur
+        $article->setAuteur($this->getUser()->getNomComplet());
+
             $this->manager->persist($article);
             $this->manager->flush();
         }
@@ -34,8 +38,10 @@ class ArticleController extends AbstractController
         ]);
     }
 
+    // ---------- DELETE ----------
+
     /**
-     *@Route("/article/delete/{id}", name="app_article_delete")
+     *@Route("admin/article/delete/{id}", name="app_article_delete")
      */
     public function articleDelete(Article $article): Response
     {
@@ -44,6 +50,28 @@ class ArticleController extends AbstractController
 
         // UNE REDIRECTION
         return $this->redirectToRoute('app_home');
+    }
+
+    // ---------- EDIT ----------
+
+    /**
+     *@Route("admin/article/edit/{id}", name="app_article_edit")
+     */
+    public function articleEdit(Article $article, Request $request): Response
+    {
+        $article = new Article();
+        $form = $this->createForm(ArticleType::class, $article);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $this->manager->persist($article);
+            $this->manager->flush();
+            return $this->redirectToRoute('app_home');
+        };
+
+        return $this->render("article/editArticle.html.twig", [
+            "formArticle" => $form->createView(),
+        ]);
     }
 }
 
