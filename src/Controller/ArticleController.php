@@ -73,6 +73,24 @@ class ArticleController extends AbstractController
             "formArticle" => $form->createView(),
         ]);
     }
+
+    /**
+     * @Route("/all/article", name="app_all_article")
+     */
+    public function allArticle(): Response
+    {
+        // Logique stocker dans une variable avec tout les articles // Afficher tous les articles de la BDD
+        $articles = $this->manager->getRepository(Article::class)->findAll();
+
+        // Equivalent d'un var_dump
+        // dd($articles);
+
+        // On ne peut qu'avoir qu'un seul return
+        return $this->render('article/allArticle.html.twig', [
+            'articles' => $articles,
+        ]);
+    
+    }
 }
 
 

@@ -18,11 +18,29 @@ class RegisterType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class)
-            ->add('password', PasswordType::class)
+            ->add('password', PasswordType::class, [
+                // POUR CHANGER LES NOMS DES CHAMPS
+                'label' =>'Mot de passe',
+                'mapped'=>false,
+                // POUR LE PLACEHOLDER / CLASS
+                'attr' => [
+                    'placeholder' => "Mot de passe",
+                    'class' => 'champPassword'
+                ]
+            ])
             ->add('nom', TextType::class)
             ->add('prenom', TextType::class)
-            ->add('dateDeNaissance', BirthdayType::class)
-            ->add('submit', SubmitType::class)
+            ->add('dateDeNaissance', BirthdayType::class, [
+                'label' => 'Date de naissance',
+                'widget' => 'single_text'
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'Inscription',
+
+                'attr' => [
+                    'class' => 'btn btn-danger'
+                ]
+            ])
         ;
     }
 

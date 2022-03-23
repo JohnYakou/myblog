@@ -34,12 +34,28 @@ class RegisterController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             // dd($form->getData());
 
+
+            
+        $emptyPassword = $form->get('password')->getData();
+
+        if($emptyPassword == null){
+            // recup le password de l'user en bdd et le renvoyer
+            $user->setPassword($user->getPassword());
+        }else{
+            $passwordEncod = $this->passwordHash->hashpassword($user, $emptyPassword);
+            $user->setPassword($passwordEncod);
+        };
+
+
+
             // Hashage du mot de passe
             $user->setPassword($this->passwordHash->hashPassword($user, $user->getPassword()));
             // On persiste l'utilisateur => prépare l'envoi des données
             $this->manager->persist($user);
             // On flush => Envoyer les données
             $this->manager->flush();
+
+            return $this->redirectToRoute('app_login');
 
             // $passwordEncod = $this->passwordHash->hashPassword($user, $user->getPassword());
 
