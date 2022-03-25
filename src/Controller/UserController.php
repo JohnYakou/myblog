@@ -38,6 +38,7 @@ class UserController extends AbstractController
         ]);
     }
 
+    // POUR MODIFIER UN USER
     /**
      * @Route("/user/edit/{id}", name="app_user_edit")
      */
@@ -58,13 +59,26 @@ class UserController extends AbstractController
             // Quand le form est soumis, verifier le champ password
             // Si il vide alors ont recup le mot de passe de l'user a modifier et on le renvoi
             
-               $this->manager->persist($user);
-               $this->manager->flush();
+               $this->managerUser->persist($user);
+               $this->managerUser->flush();
                return $this->redirectToRoute('app_user');
            };
             
            return $this->render('user/editUser.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    // POUR SUPPRIMER UN USER
+    /**
+     * @Route("/user/delete/{id}", name="app_user_delete")
+     */
+
+    public function deleteUser(User $user): Response
+    {
+        $this->managerUser->remove($user); // Effacer l'utilisateur
+        $this->managerUser->flush();
+
+        return $this->redirectToRoute('app_user');
     }
 }

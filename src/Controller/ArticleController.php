@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Form\ArticleType;
+use App\Entity\Commentaire;
+use App\Form\CommentaireType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -74,6 +76,8 @@ class ArticleController extends AbstractController
         ]);
     }
 
+    // ----------------------------------
+
     /**
      * @Route("/all/article", name="app_all_article")
      */
@@ -85,12 +89,42 @@ class ArticleController extends AbstractController
         // Equivalent d'un var_dump
         // dd($articles);
 
-        // On ne peut qu'avoir qu'un seul return
+        // On ne peut qu'avoir qu'un seul return par public function
         return $this->render('article/allArticle.html.twig', [
             'articles' => $articles,
         ]);
-    
+    }
+
+    // ----------------------------------
+
+    /**
+     * @Route("/single/article/{id}", name="app_view_article")
+     */
+    public function singleArticle(Article $article, Request $request): Response
+    {
+        // METTRE LE FORM DE COMMENTAIRE
+        // Lors de la soumission envoyer en base de donné le com
+        $commentaire = new Commentaire();
+
+        $form = $this->createForm(CommentaireType::class, $commentaire);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $commentaire->setDate(new \DateTime());
+            $commentaire->setAuteur($this->getUser());
+            $commentaire->setArticle($article);
+
+            $this->manager->persist($commentaire);
+            $this->manager->flush();
+
+            return $this->redirectToRoute('app_view_article',[
+                'id' => $article->getId(),
+            ]);
+        }
+
+        return $this->render('article/singleArticle.html.twig', [
+            'articles' => $article,
+            'form' => $form->createView()
+        ]);
     }
 }
-
-

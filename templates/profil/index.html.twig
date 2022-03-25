@@ -15,12 +15,12 @@
         {% if is_granted("ROLE_ADMIN") %}
             <a class="text-center" href="{{path('app_user')}}">Voir les utilisateurs du site</a>
             <br>
-            <a class="text-center" href="">Voir les articles du site</a>
+            <a class="text-center" href="{{path('app_all_article')}}">Voir les articles du site</a>
             <br>
         {% endif %}
             <a class="text-center" href="">Voir les commentaires du site</a>
             <br>
-            <a class="text-center" href="">Editer mon profil</a>
+            <a class="text-center" href="{{path('app_user_edit', {id:app.user.id})}}">Editer mon profil</a>
         
     </div>
     

@@ -19,12 +19,12 @@
           </a>
           {# Condition pour changer "Mon compte" et "deconnexion" #}
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            {% if not app.user %} {# Si l'utilisateur n'est pas connecter tu affiche inscription et connexion #}
+            {% if not app.user %} {# Si l'utilisateur n'est pas connecter tu affiche "inscription" et "connexion" #}
 
             <li><a class="dropdown-item" href="{{path('app_register')}}">Inscription</a></li>
             <li><a class="dropdown-item" href="{{path('app_login')}}">Connexion</a></li>
 
-            {% else %}{# Sinon tu affiche deconnexion et mon compte #}
+            {% else %}{# Sinon tu affiche "deconnexion" et "mon compte" #}
 
             <li><a class="dropdown-item" href="{{path('app_logout')}}">Deconnexion</a></li>
             <li><hr class="dropdown-divider"></li>

@@ -1,69 +1,64 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Accueil{% endblock %}
 
 {% block body %}
-    {# CAROUSEL #}
-    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-        <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwallpapercave.com%2Fwp%2FIJ8Sc8l.jpg&f=1&nofb=1" class="d-block w-100" alt="..." style="height:40rem">
-        </div>
-        <div class="carousel-item">
-        <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwallpapercave.com%2Fwp%2Fwp5814680.jpg&f=1&nofb=1" class="d-block w-100" alt="..." style="height:40rem">
-        </div>
-        <div class="carousel-item">
-        <img src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwallup.net%2Fwp-content%2Fuploads%2F2016%2F01%2F183113-landscape-volcano.jpg&f=1&nofb=1" class="d-block w-100" alt="..." style="height:40rem">
-        </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-    </div>
-
-
-
-{# ---------- DELETE ---------- #}
-    <section class="container m-5">
-        <div class="row">
+<body>
+  <!-- Header-->
+  <header class="bg-dark py-5">
+      <div class="container px-4 px-lg-5 my-5">
+          <div class="text-center text-white">
+              <h1 class="display-4 fw-bolder">Shop in style</h1>
+              <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
+          </div>
+      </div>
+  </header>
+  <!-- Section-->
+  <section class="py-5">
+      <div class="container px-4 px-lg-5 mt-5">
+          <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
             {% for article in articles %}
-                <div class="card col-md-3 m-2" style="width: 18rem;">
-                    <img src="{{article.photo}}" class="card-img-top" alt="image">
-            
-                    <div class="card-body">
-                        <h5 class="card-title">{{article.titre}}</h5>
-                        <p class="card-text">{{article.description}}</p>
-                        <a href="#" class="btn btn-primary">{{article.auteur}}</a>
-                        <br>
-                        <span>{{article.publication | date("d/m/Y")}}</span>
-                        <br>
-                        {# app.user => utilisateur connecté #}
-                        {# Grace à cette condition, seul l'admin peut supprimer ou modifier un article #}
-                        {% if is_granted("ROLE_ADMIN") %}
-                        {# BOUTON POUR SUPPRIMER EN RELIANT app_article_delete DANS ArticleController.php #}
-                        <a class="btn btn-danger" href="{{path('app_article_delete', {id:article.id})}}">Supprimer</a>
-                        <a class="btn btn-warning" href="{{path('app_article_edit', {id:article.id})}}">Edit</a>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endfor %}
+              <div class="col mb-5">
+                  <div class="card h-100">
+                      <!-- Product image-->
+                      <img style="width:150;" src="{{article.photo}}">
+                      <!-- Product details-->
+                      <div class="card-body p-4">
+                          <div class="text-center">
+                              <!-- Product name-->
+                              <h5 class="fw-bolder">{{article.titre}}</h5>
+                              <!-- Product price-->
+                              {{article.publication | date('d/m/Y')}}
+                          </div>
+                      </div>
+                      <!-- Product actions-->
+                      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                          <div class="text-center">
+                            {% if is_granted ("ROLE_ADMIN")  %}
+                            <a href="{{path('app_article_delete',{id: article.id})}}"class="text-danger">Supprimer</a>
+                            
+                            <br>
 
-            {% for user in users %}
-                <div class="card col-md-3 m-2" style="width: 18rem;">            
-                    <div class="card-body">
-                        <h5 class="card-title">{{user.email}}</h5>
-                        <h5 class="card-title">{{user.password}}</h5>
-                        <h5 class="card-title">{{user.nom}}</h5>
-                        <h5 class="card-title">{{user.prenom}}</h5>
-                        <h5 class="card-title">{{user.dateDeNaissance | date('d/m/Y')}}</h5>
-                    </div>
-                </div>
+                            <a href="{{path('app_article_edit',{id: article.id})}}"class="text-warning">Modifier</a>
+                               {% endif %}
+                               
+                            <br>
+
+                            <a href="{{path('app_view_article',{id: article.id})}}"class="text-success">Voir</a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
             {% endfor %}
-        </div>
-    </section>
+          </div>
+      </div>
+  </section>
+  <!-- Footer-->
+  <footer class="py-5 bg-dark">
+      <div class="container"><p class="m-0 text-center text-white">Copyright © Your Website 2022</p></div>
+  </footer>
+
 {% endblock %}
+
+
+
