@@ -5,11 +5,11 @@
 {% block body %}
 <body>
   <!-- Header-->
-  <header class="bg-dark py-5">
+  <header class="bg-dark py-1">
       <div class="container px-4 px-lg-5 my-5">
           <div class="text-center text-white">
-              <h1 class="display-4 fw-bolder">Shop in style</h1>
-              <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
+              <h1 class="display-4 fw-bolder">Mon blog</h1>
+              <p class="lead fw-normal text-white-50 mb-0">Bienvenue sur MyBlog</p>
           </div>
       </div>
   </header>
@@ -20,8 +20,8 @@
             {% for article in articles %}
               <div class="col mb-5">
                   <div class="card h-100">
-                      <!-- Product image-->
-                      <img style="width:150;" src="{{article.photo}}">
+                      <!-- Pour prendre une photo, je met le chemin -->
+                      <img style="width:150;" src="{{asset('uploads/photo/' ~ article.photo)}}">
                       <!-- Product details-->
                       <div class="card-body p-4">
                           <div class="text-center">

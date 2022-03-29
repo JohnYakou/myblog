@@ -10,7 +10,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class ArticleController extends AbstractController
 {
@@ -22,16 +24,41 @@ class ArticleController extends AbstractController
     /**
      *@Route("/article", name="app_article")
      */
-    public function index(Request $request): Response
+    public function index(Request $request, SluggerInterface $slugger): Response
     {
         $article = new Article();
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
+            // Pour l'image | On écrit 'photo", car c'est le nom dans ArticleType.php
+            $photoArticle = $form->get('photo')->getData();
+       
+            if($photoArticle){
+           $originalFilename = pathinfo($photoArticle->getClientOriginalName(),PATHINFO_FILENAME);
+           $safeFilename = $slugger->slug($originalFilename);
+           // Pour concaténé le fichier | uniqid permet d'avoir un id, un nom unique
+           $newFilename = $safeFilename.'-'.uniqid().'.'.$photoArticle->guessExtension();
+             try {
+                $photoArticle->move(
+                    // parameter entre dans parameter dans config/service.yaml
+                    $this->getParameter('photo'),
+                    $newFilename
+                );
+             }catch (FileException $e){
+
+             }
+             // Pour envoyer en BDD
+              $article->setPhoto($newFilename);
+            }else{
+                dd('aucune photo disponible');
+            }
+            
 
         // Pour récupérer dynamiquement le nom de l'auteur
         $article->setAuteur($this->getUser()->getNomComplet());
 
+            // Pour envoyer automatiquement la date d'aujourd'hui
+            $article->setPublication(new \datetime);
             $this->manager->persist($article);
             $this->manager->flush();
         }
@@ -47,6 +74,7 @@ class ArticleController extends AbstractController
      */
     public function articleDelete(Article $article): Response
     {
+
         $this->manager->remove($article);
         $this->manager->flush();
 
@@ -59,13 +87,36 @@ class ArticleController extends AbstractController
     /**
      *@Route("admin/article/edit/{id}", name="app_article_edit")
      */
-    public function articleEdit(Article $article, Request $request): Response
+    public function articleEdit(Article $article, Request $request, SluggerInterface $slugger): Response
     {
         $article = new Article();
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
+                        // Pour l'image | On écrit 'photo", car c'est le nom dans ArticleType.php
+                        $photoArticle = $form->get('photo')->getData();
+       
+                        if($photoArticle){
+                       $originalFilename = pathinfo($photoArticle->getClientOriginalName(),PATHINFO_FILENAME);
+                       $safeFilename = $slugger->slug($originalFilename);
+                       // Pour concaténé le fichier | uniqid permet d'avoir un id, un nom unique
+                       $newFilename = $safeFilename.'-'.uniqid().'.'.$photoArticle->guessExtension();
+                         try {
+                            $photoArticle->move(
+                                // parameter entre dans parameter dans config/service.yaml
+                                $this->getParameter('photo'),
+                                $newFilename
+                            );
+                         }catch (FileException $e){
+            
+                         }
+                         // Pour envoyer en BDD
+                          $article->setPhoto($newFilename);
+                        }else{
+                            dd('aucune photo disponible');
+                        };
+
             $this->manager->persist($article);
             $this->manager->flush();
             return $this->redirectToRoute('app_home');
